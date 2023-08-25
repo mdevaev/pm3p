@@ -1,0 +1,19 @@
+RUN pkg-install \
+		tmate \
+		vi-vim-symlink \
+		python \
+		python-pip \
+		python-aiohttp \
+		python-pyserial
+
+RUN pip install --break-system-packages --user pymodbus
+
+COPY stages/pm3p/pm3p.py /usr/local/bin/pm3p
+COPY stages/pm3p/pm3p.service /etc/systemd/system/pm3p.service
+RUN systemctl enable pm3p
+
+ARG ROOT_PASSWD
+ENV ROOT_PASSWD $ROOT_PASSWD
+RUN echo "root:$ROOT_PASSWD" | chpasswd \
+	&& echo "PermitRootLogin yes" >> /etc/ssh/sshd_config \
+	&& userdel -r -f alarm
