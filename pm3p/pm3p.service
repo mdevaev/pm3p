@@ -1,0 +1,15 @@
+[Unit]
+Description=3-phase power meter HTTP service
+After=network.target network-online.target nss-lookup.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3
+
+ExecStart=/usr/local/bin/pm3p
+ExecStopPost=/usr/local/bin/pm3p
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
